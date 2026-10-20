@@ -30,6 +30,9 @@ struct Pet {
 
 Pet pet;
 Alert pendingAlert = ALERT_NONE;
+unsigned long heartUntil = 0;   // heart emote shows until this millis()
+
+void showHeart() { heartUntil = millis() + 4000; }
 uint32_t ticks = 0;
 uint8_t heatCooldown = 0, dirtyCooldown = 0;   // seconds until the alert may repeat
 
@@ -80,6 +83,7 @@ void growUp() {
   if (pet.stage >= STAGE_ADULT) return;
   pet.stage = (Stage)(pet.stage + 1);
   pet.stageSeconds = 0;
+  showHeart();
   queueAlert(ALERT_GREW);
 }
 

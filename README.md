@@ -125,10 +125,14 @@ which drops the 1.2 KB Adafruit logo.
 
 ## Art pipeline
 
-Draw 1-bit sprites in Piskel, export PNG, convert with
-[image2cpp](https://javl.github.io/image2cpp/) (horizontal, 1 bit per pixel), and paste
-into `turtle_board/sprites.h` with `PROGMEM`. Or draw ASCII art and run
-`python3 tools/ascii_sprite.py art.txt SPR_NAME`.
+Every sprite already exists as placeholder art in `turtle_board/sprites.h`, and the
+code already uses all of them. To add real art, replace an array with yours, keeping the
+**same name and same size**. No other file needs to change.
+
+Draw in Piskel, convert with [image2cpp](https://javl.github.io/image2cpp/) (black
+background, Horizontal, 1 bit per pixel), and paste. Preview the whole set without
+uploading: `python3 tools/preview_sprites.py` writes `sprite_sheet.png`.
+The team's Sprite Guide doc has the full list and step-by-step instructions.
 
 ## Journey data
 

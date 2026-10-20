@@ -44,6 +44,7 @@ void petTurtle() {
   if (millis() - lastPet < 10000UL && lastPet != 0) { showMessage(F("Zzz..."), F("Pet again soon")); return; }
   lastPet = millis();
   addTo(pet.happy, 2);
+  showHeart();
   playMelody(MEL_EAT);
   showMessage(F("Happy turtle!"), F("Happiness +2"));
 }
@@ -146,31 +147,44 @@ void updateScreen() {
 }
 
 // ---------------- Drawing ----------------
+// Four 8x8 stat icons, each followed by its bar: health, happiness, food, comfort.
 void drawStatBars() {
-  const char labels[] = "HJFC";   // Health, Joy (happiness), Food (hunger), Comfort
-  uint8_t vals[] = {pet.health, pet.happy, pet.hunger, pet.comfort};
-  for (uint8_t i = 0; i < 4; i++) {
-    display.setCursor(i * 32, 0);
-    display.print(labels[i]);
-    drawBar(i * 32 + 7, 1, vals[i]);
-  }
+  drawSprite(0,  0, SPR_ICON_HEALTH,  8, 8, 1); drawBar(10,  1, pet.health);
+  drawSprite(32, 0, SPR_ICON_HAPPY,   8, 8, 1); drawBar(42,  1, pet.happy);
+  drawSprite(64, 0, SPR_ICON_FOOD,    8, 8, 1); drawBar(74,  1, pet.hunger);
+  drawSprite(96, 0, SPR_ICON_COMFORT, 8, 8, 1); drawBar(106, 1, pet.comfort);
 }
 
-void drawTurtle(int16_t cx, int16_t cy) {
-  int16_t bob = (millis() / 500) % 2;
-  if (pet.stage == STAGE_HATCHLING) {
-    drawSprite(cx - 8, cy - 8 + bob, SPR_TURTLE, 16, 16, 1);
-  } else {
-    drawSprite(cx - 16, cy - 16 + bob, SPR_TURTLE, 16, 16, 2);
-    if (pet.stage == STAGE_ADULT && !pet.female)   // adult males have long tails
-      display.fillRect(cx - 1, cy + 14 + bob, 2, 6, SSD1306_WHITE);
-  }
+// The mood bubble beside the turtle. Most urgent first; nullptr = no bubble.
+const uint8_t* currentEmote() {
   bool fresh = envFresh();
-  if (fresh && env.wq == WQ_AVOID) textAt(cx + 18, cy - 12, F("~ick"));
-  if (fresh && env.heatIndexF >= 90) {
-    display.fillCircle(cx - 20, cy - 6 + bob, 1, SSD1306_WHITE);
-    display.fillCircle(cx - 23, cy + 0 + bob, 1, SSD1306_WHITE);
+  if (fresh && env.wq == WQ_AVOID)    return SPR_EMO_SICK;
+  if (fresh && env.heatIndexF >= 90)  return SPR_EMO_HOT;
+  if (pet.sunscreenDue)               return SPR_EMO_SUN;
+  if (pet.hunger < 30)                return SPR_EMO_HUNGRY;
+  if (millis() < heartUntil)          return SPR_EMO_HEART;
+  return nullptr;
+}
+
+// The turtle for its life stage, centred on (cx, cy), with a 2-frame swim and a 1-pixel bob.
+void drawTurtle(int16_t cx, int16_t cy) {
+  bool f = (millis() / 400) % 2;              // swap swim frames every 0.4 s
+  int16_t bob = (millis() / 800) % 2;
+  const uint8_t* spr;
+  uint8_t sz;
+  switch (pet.stage) {
+    case STAGE_HATCHLING: spr = f ? SPR_HATCH_1 : SPR_HATCH_0; sz = 16; break;
+    case STAGE_JUVENILE:  spr = f ? SPR_JUV_1   : SPR_JUV_0;   sz = 24; break;
+    default:
+      if (pet.female) spr = f ? SPR_ADULT_F_1 : SPR_ADULT_F_0;
+      else            spr = f ? SPR_ADULT_M_1 : SPR_ADULT_M_0;
+      sz = 32;
   }
+  drawSprite(cx - sz / 2, cy - sz / 2 + bob, spr, sz, sz, 1);
+
+  const uint8_t* emote = currentEmote();
+  if (emote && (millis() / 600) % 4 != 0)     // blink off briefly so it catches the eye
+    drawSprite(cx + sz / 2 + 2, cy - sz / 2, emote, 8, 8, 1);
 }
 
 void drawStatusCorner() {
@@ -193,7 +207,9 @@ void drawHome() {
 void drawEgg() {
   uint16_t period = map(pet.eggSeconds, 0, EGG_SECONDS, 600, 120);   // wobbles faster near hatching
   int16_t wobble = (millis() / period) % 2 ? 1 : -1;
-  drawSprite(48 + wobble, 10, SPR_EGG, 16, 16, 2);
+  uint16_t left = EGG_SECONDS - pet.eggSeconds;
+  const uint8_t* spr = left <= 5 ? SPR_EGG_CRACK_1 : (left <= 15 ? SPR_EGG_CRACK_0 : SPR_EGG);
+  drawSprite(48 + wobble, 10, spr, 16, 16, 2);   // drawn 2x: 32x32 on screen
   textAt(28, 0, F("Incubating..."));
   display.setCursor(28, 46); display.print(F("Nest ")); printTenths(env.nest10); display.print(F(" C"));
   drawStatusCorner();

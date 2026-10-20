@@ -87,6 +87,7 @@ bool updateCrab() {
     g.overMs = now;
     addTo(pet.hunger, 5 * g.crabs);
     addTo(pet.happy, 10);                  // playing any game cheers it up
+    if (g.crabs) showHeart();
     addTo(pet.health, -10 * (int)g.bags);
   }
   return false;
@@ -104,7 +105,11 @@ void drawCrab() {
   display.setCursor(0, 0); display.print(F("Crabs ")); display.print(g.crabs);
   unsigned long left = (GAME_SECONDS * 1000UL - (millis() - g.startMs)) / 1000;
   display.setCursor(104, 0); display.print(left); display.print('s');
-  for (Faller& f : g.items)
-    if (f.alive) drawSprite(f.x, f.y, f.kind ? SPR_BAG : SPR_CRAB, 8, 8, 1);
-  drawSprite(g.px, PLAYER_Y, SPR_TURTLE, 16, 16, 1);
+  bool f2 = (millis() / 300) % 2;   // swap animation frames every 0.3 s
+  for (Faller& f : g.items) {
+    if (!f.alive) continue;
+    const uint8_t* spr = f.kind ? (f2 ? SPR_BAG_1 : SPR_BAG_0) : (f2 ? SPR_CRAB_1 : SPR_CRAB_0);
+    drawSprite(f.x, f.y, spr, 8, 8, 1);
+  }
+  drawSprite(g.px, PLAYER_Y, f2 ? SPR_HATCH_1 : SPR_HATCH_0, 16, 16, 1);
 }
