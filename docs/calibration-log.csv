@@ -1,0 +1,12 @@
+date,cup,trial,tds_ppm,turbidity_volts,cloud_pct,salt_raw,water_c,notes
+2026-10-21,Clean (distilled),1,,,,,,
+2026-10-21,Clean (distilled),2,,,,,,
+2026-10-21,Clean (distilled),3,,,,,,
+2026-10-21,Tap,1,,,,,,
+2026-10-21,Seawater 35 g/L,1,,,,,,
+2026-10-21,Milk 1 mL/L,1,,,,,,
+2026-10-21,Milk 2 mL/L,1,,,,,,
+2026-10-21,Milk 5 mL/L,1,,,,,,
+2026-10-21,Milk 10 mL/L,1,,,,,,
+2026-10-21,Runoff,1,,,,,,
+2026-10-21,Probe in air,1,,,,,,
