@@ -6,12 +6,14 @@
 
 struct Note { uint16_t freq; uint16_t ms; };
 
-const Note MEL_HATCH[]  PROGMEM = {{523, 100}, {659, 100}, {784, 100}, {1047, 250}, {0, 0}};
-const Note MEL_EAT[]    PROGMEM = {{880, 60}, {1175, 80}, {0, 0}};
-const Note MEL_BAD[]    PROGMEM = {{220, 150}, {196, 250}, {0, 0}};
-const Note MEL_GROW[]   PROGMEM = {{659, 100}, {784, 100}, {988, 100}, {1319, 300}, {0, 0}};
-const Note MEL_ALERT[]  PROGMEM = {{1000, 120}, {0, 80}, {1000, 120}, {0, 0}};
-const Note MEL_RESCUE[] PROGMEM = {{880, 200}, {660, 200}, {880, 200}, {660, 200}, {0, 0}};
+// Pitches sit around 1-2.5 kHz, where small speakers are loudest; low notes barely
+// come through a tiny speaker. Each sound ends on a held note so it reads as a "ding".
+const Note MEL_HATCH[]  PROGMEM = {{1047, 150}, {1319, 150}, {1568, 150}, {0, 60}, {2093, 600}, {0, 0}};
+const Note MEL_EAT[]    PROGMEM = {{1568, 70}, {2093, 110}, {0, 0}};
+const Note MEL_BAD[]    PROGMEM = {{880, 180}, {0, 40}, {659, 380}, {0, 0}};
+const Note MEL_GROW[]   PROGMEM = {{1319, 120}, {1568, 120}, {1976, 120}, {0, 60}, {2637, 500}, {0, 0}};
+const Note MEL_ALERT[]  PROGMEM = {{2000, 150}, {0, 100}, {2000, 150}, {0, 0}};
+const Note MEL_RESCUE[] PROGMEM = {{1760, 250}, {1319, 250}, {1760, 250}, {1319, 250}, {0, 0}};
 
 const Note* curMelody = nullptr;
 uint8_t curNote = 0;
