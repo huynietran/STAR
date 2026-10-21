@@ -14,7 +14,7 @@ board's `config.h` in the same commit.
 | D4 | Button C (back) | Same |
 | D7 | Nothing | Reserved: SoftwareSerial needs a TX pin |
 | D8 | Link from Reef Station D1, through 1 kΩ | SoftwareSerial receive, 9600 baud |
-| D9 | 10 kΩ pot (volume) → amplifier input | `tone()`. Pot ends: D9 and GND; wiper to amp in. |
+| D9 | 220 Ω → speaker red wire; speaker black wire → GND | `tone()`. Quiet but safe. Never wire the speaker straight to the pin (too much current). For louder sound: an amplifier board (e.g. PAM8403) or a TIP120 transistor. |
 | GND | Reef Station GND | Required for the link |
 | A0 | Nothing | Left floating on purpose: seeds the random generator |
 | D5, D6, D10 | Optional mood RGB LED | On/off only. No `analogWrite` on D3/D11 (`tone()` uses their timer). |
