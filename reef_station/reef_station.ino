@@ -163,6 +163,19 @@ void sendLine() {
   Serial.print(F(",hi:"));     Serial.print((int)lround(heatF));
   Serial.print(F(",nest:"));   Serial.print(nestC, 1);
   Serial.print(F(",wq:"));     Serial.println(wq);
+
+#if CAL_MODE
+  // Raw numbers for docs/calibration.md. Uses '=' (no ':'), so the Turtle Board ignores it.
+  Serial.print(F("RAW salt="));  Serial.print(saltRaw.get());
+#if USE_DIY_CLOUD
+  Serial.print(F(" cloudSignal=")); Serial.print(cloudRaw.get());
+#else
+  Serial.print(F(" turbV="));    Serial.print(cloudRaw.get() * VREF / 1023.0, 2);
+#endif
+  Serial.print(F(" light="));    Serial.print(lightRaw.get());
+  // At room temperature (egg not under the lamp), this is the value for NEST_OFFSET_C
+  Serial.print(F(" nestOffset=")); Serial.println(airC - (nestC - NEST_OFFSET_C), 1);
+#endif
 }
 
 const __FlashStringHelper* verdictWord() {

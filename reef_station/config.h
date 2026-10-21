@@ -61,3 +61,9 @@ const unsigned long SAMPLE_MS = 200;
 const unsigned long SEND_MS   = 1000;
 const unsigned long DHT_MS    = 2000;
 const unsigned long PAGE_MS   = 3000;
+
+// ---------- Calibration mode ----------
+// 1 = also print a "RAW ..." line every second with the numbers the calibration
+// session needs (docs/calibration.md). The Turtle Board ignores that line.
+// Set back to 0 after calibrating.
+#define CAL_MODE 0
