@@ -30,14 +30,14 @@ const unsigned long COMBO_HOLD_MS   = 3000;  // hold time for two-button combos
 const uint16_t EGG_SECONDS       = 60;
 const uint16_t STAGE_SECONDS     = 90;    // seconds of good care per growth stage
 const uint16_t RESCUE_SECONDS    = 60;
-const uint16_t SUNSCREEN_SECONDS = 120;   // stands in for 2 hours
+const uint16_t SUNSCREEN_SECONDS = 20;    // stands in for 2 hours (short to fit the 4-minute demo)
 #else
 const uint16_t EGG_SECONDS       = 600;
 const uint16_t STAGE_SECONDS     = 1800;
 const uint16_t RESCUE_SECONDS    = 300;
 const uint16_t SUNSCREEN_SECONDS = 7200;  // 2 hours (dermatologists' guidance)
 #endif
-const uint16_t GAME_SECONDS      = 30;
+const uint16_t GAME_SECONDS      = 20;    // Crab Catch and Net Escape round length
 
 // ---------- Rules (tune during testing) ----------
 // Sex-from-temperature curve: FEMALE_PERMILLE table in pet.h (50% female at 30.0 C)
