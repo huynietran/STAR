@@ -1,5 +1,10 @@
 # Calibration
 
+> **Current demo: no salt sensor** (`USE_SALT 0` in `reef_station/config.h`). Skip every salt and TDS step below;
+> calibrate only the turbidity sensor (`CLOUD_V_CLEAR`, `CLOUD_V_MURKY`, `CLOUD_CAUTION`, `CLOUD_AVOID`),
+> the light sensor and the nest offset. The swim light then works from cloudiness alone:
+> clean → green, slightly cloudy → yellow, runoff → red.
+
 Calibration is what makes the numbers believable to judges. Do a full session on
 Wednesday, then redo the clear-water baseline and the light threshold in the demo
 room on Sunday. Record every reading in `calibration-log.csv`.

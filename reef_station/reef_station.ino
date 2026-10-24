@@ -30,6 +30,11 @@ uint8_t cloud = 0;        // %
 float   waterC = 25.0, airC = 25.0, rh = 50, heatBaseF = 77, heatF = 77, nestC = 25.0;
 uint8_t sunPct = 0;
 uint8_t wq = WQ_NO_SAMPLE;
+#if NO_SALT_SENSOR && SIM_SALT
+bool simSalty = true;            // simulated salt reading: true = seawater, false = fresh
+bool simBtnLast = HIGH;
+unsigned long simBtnChanged = 0;
+#endif
 bool    dhtOk = false;
 
 unsigned long lastSample = 0, lastSend = 0, lastDht = 0, lastPage = 0;
@@ -109,7 +114,16 @@ void computeValues() {
   waterProbe.requestTemperatures();
 
   bool dry, salty;
-#if USE_DIY_SALT
+#if NO_SALT_SENSOR
+  // No salt sensor: never "dry", and treat every sample as seawater,
+  // so the verdict depends only on cloudiness.
+  dry = false;
+#if SIM_SALT
+  salty = simSalty;
+#else
+  salty = true;
+#endif
+#elif USE_DIY_SALT
   int r = saltRaw.get();
   dry = r < SALT_DRY_RAW;
   salPpt = dry ? 0 : saltFromRaw(r);
@@ -150,12 +164,21 @@ void setLights() {
 
 // One line, docs/link-protocol.md. Also readable by the Arduino Serial Plotter.
 void sendLine() {
+#if NO_SALT_SENSOR
+#if SIM_SALT
+  Serial.print(F("tds:"));     Serial.print(simSalty ? 1000 : 300);   // simulated
+  Serial.print(F(",cloud:"));  Serial.print(cloud);
+#else
+  Serial.print(F("cloud:"));   Serial.print(cloud);
+#endif
+#else
 #if USE_DIY_SALT
   Serial.print(F("sal:"));     Serial.print(salPpt, 1);
 #else
   Serial.print(F("tds:"));     Serial.print(tds);
 #endif
   Serial.print(F(",cloud:"));  Serial.print(cloud);
+#endif
   Serial.print(F(",water:"));  Serial.print(waterC, 1);
   Serial.print(F(",air:"));    Serial.print(airC, 1);
   Serial.print(F(",rh:"));     Serial.print((int)rh);
@@ -166,7 +189,10 @@ void sendLine() {
 
 #if CAL_MODE
   // Raw numbers for docs/calibration.md. Uses '=' (no ':'), so the Turtle Board ignores it.
-  Serial.print(F("RAW salt="));  Serial.print(saltRaw.get());
+  Serial.print(F("RAW"));
+#if !NO_SALT_SENSOR
+  Serial.print(F(" salt="));  Serial.print(saltRaw.get());
+#endif
 #if USE_DIY_CLOUD
   Serial.print(F(" cloudSignal=")); Serial.print(cloudRaw.get());
 #else
@@ -206,6 +232,18 @@ void showPage() {
       else { lcd.print(F("Cloudiness ")); lcd.print(cloud); lcd.print('%'); }
       break;
     case 1: {
+#if NO_SALT_SENSOR
+#if SIM_SALT
+      lcd.print(F("Salt (sim)"));
+      lcd.setCursor(0, 1);
+      lcd.print(simSalty ? F("SEAWATER") : F("FRESH"));
+#else
+      lcd.print(F("Water ")); lcd.print(waterC, 1); lcd.print('C');
+      lcd.setCursor(0, 1);
+      lcd.print(F("Cloud ")); lcd.print(cloud); lcd.print('%');
+#endif
+      break;
+#endif
 #if USE_DIY_SALT
       lcd.print(F("Sal ")); lcd.print(salPpt, 1); lcd.print(F(" ppt"));
       bool salty = salPpt >= SAL_SALTY_MIN;
@@ -235,6 +273,27 @@ void showPage() {
   }
 }
 
+#if NO_SALT_SENSOR && SIM_SALT
+// Demo button: each press flips the simulated salt reading and shows it right away.
+void pollSimSaltButton(unsigned long now) {
+  bool b = digitalRead(PIN_SIM_SALT_BTN);
+  if (b != simBtnLast && now - simBtnChanged > 50) {   // 50 ms debounce
+    simBtnChanged = now;
+    simBtnLast = b;
+    if (b == LOW) {                                     // pressed
+      simSalty = !simSalty;
+      lcd.clear();
+      lcd.print(F("Salt (sim) set:"));
+      lcd.setCursor(0, 1);
+      lcd.print(simSalty ? F("SEAWATER") : F("FRESH"));
+      lastPage = now;                                   // hold this message one page-time
+      computeValues();
+      setLights();
+    }
+  }
+}
+#endif
+
 // ---------------- Main ----------------
 void setup() {
   Serial.begin(9600);   // D1 (TX) also feeds the Turtle Board
@@ -256,11 +315,17 @@ void setup() {
   pinMode(PIN_SALT_DRIVE_A, OUTPUT);
   pinMode(PIN_SALT_DRIVE_B, OUTPUT);
 #endif
+#if NO_SALT_SENSOR && SIM_SALT
+  pinMode(PIN_SIM_SALT_BTN, INPUT_PULLUP);
+#endif
   lastPage = millis();
 }
 
 void loop() {
   unsigned long now = millis();
+#if NO_SALT_SENSOR && SIM_SALT
+  pollSimSaltButton(now);
+#endif
   if (now - lastSample >= SAMPLE_MS) { lastSample = now; sampleSensors(); }
   if (now - lastDht >= DHT_MS)       { lastDht = now; readDht(); }
   if (now - lastSend >= SEND_MS) {

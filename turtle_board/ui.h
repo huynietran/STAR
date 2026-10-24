@@ -265,10 +265,11 @@ void drawWater() {
   display.setCursor(0, 22); display.print(F("Cloudiness ")); display.print(env.cloud); display.print('%');
   display.setCursor(0, 32);
   if (env.sal10 >= 0) { display.print(F("Salinity ")); printTenths(env.sal10); display.print(F(" ppt")); }
-  else                { display.print(F("TDS ")); display.print(env.tds); display.print(F(" ppm")); }
+  else if (env.tds > 0) { display.print(F("TDS ")); display.print(env.tds); display.print(F(" ppm")); }
+  // no salt sensor on the Reef Station: no salt line
   switch (env.wq) {
     case WQ_CLEAN:   textAt(0, 48, F("Perfect Gulf water!")); break;
-    case WQ_CAUTION: textAt(0, 48, F("Fresh or cloudy...")); textAt(0, 56, F("runoff? Be careful.")); break;
+    case WQ_CAUTION: textAt(0, 48, F("A bit cloudy...")); textAt(0, 56, F("runoff? Be careful.")); break;
     case WQ_AVOID:   textAt(0, 48, F("Murky! I feel sick.")); break;
     default:         textAt(0, 48, F("Dip a probe!")); break;
   }

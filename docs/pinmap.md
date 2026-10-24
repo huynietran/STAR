@@ -24,7 +24,7 @@ board's `config.h` in the same commit.
 | Pin | Connects to | Notes |
 | --- | --- | --- |
 | D12, D11, D5, D4, D3, D2 | LCD RS, E, D4, D5, D6, D7 | V0 to contrast pot wiper, RW to GND, backlight through 220 Ω |
-| A0 | TDS sensor output | 0–2.3 V |
+| A0 | TDS salt sensor output, **not used in this demo** (`USE_SALT 0`) | 0–2.3 V |
 | A1 | Turbidity sensor output | Board switch on "A". Only the probe tip goes in water. |
 | A2 | Photoresistor divider | Photoresistor 5 V → A2, 10 kΩ A2 → GND |
 | A3 | TMP36 "nest" sensor, at the breadboard edge so judges can pinch it | Flat face toward you: left 5 V, middle signal, right GND. Pinching it warms the nest; only the middle third of the egg stage counts. |
