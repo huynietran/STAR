@@ -21,25 +21,27 @@ void dottedLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1) {
     display.drawPixel(x0 + (x1 - x0) * s / steps, y0 + (y1 - y0) * s / steps, SSD1306_WHITE);
 }
 
+const int8_t MAP_DY = 6;   // shift the map down so it sits below the yellow header
+
 void drawJourney() {
   // Coastline, dotted
   for (uint8_t i = 0; i + 1 < COAST_N; i++)
-    dottedLine(pgm_read_byte(&COAST_XY[i][0]), pgm_read_byte(&COAST_XY[i][1]),
-               pgm_read_byte(&COAST_XY[i + 1][0]), pgm_read_byte(&COAST_XY[i + 1][1]));
+    dottedLine(pgm_read_byte(&COAST_XY[i][0]), pgm_read_byte(&COAST_XY[i][1]) + MAP_DY,
+               pgm_read_byte(&COAST_XY[i + 1][0]), pgm_read_byte(&COAST_XY[i + 1][1]) + MAP_DY);
 
   // Lucky's trail so far, solid: one waypoint per second, then hold on the last one
   uint8_t idx = min((unsigned long)(TRACK_N - 1), (millis() - journeyStart) / 1000);
   for (uint8_t i = 0; i < idx; i++)
-    display.drawLine(pgm_read_byte(&TRACK_XY[i][0]), pgm_read_byte(&TRACK_XY[i][1]),
-                     pgm_read_byte(&TRACK_XY[i + 1][0]), pgm_read_byte(&TRACK_XY[i + 1][1]),
+    display.drawLine(pgm_read_byte(&TRACK_XY[i][0]), pgm_read_byte(&TRACK_XY[i][1]) + MAP_DY,
+                     pgm_read_byte(&TRACK_XY[i + 1][0]), pgm_read_byte(&TRACK_XY[i + 1][1]) + MAP_DY,
                      SSD1306_WHITE);
-  display.fillCircle(pgm_read_byte(&TRACK_XY[idx][0]), pgm_read_byte(&TRACK_XY[idx][1]), 2, SSD1306_WHITE);
+  display.fillCircle(pgm_read_byte(&TRACK_XY[idx][0]), pgm_read_byte(&TRACK_XY[idx][1]) + MAP_DY, 2, SSD1306_WHITE);
 
   // Labels: name and day on top, places on the map, tag date at the bottom
-  textAt(0, 0, F("Lucky"));
-  display.setCursor(80, 0); display.print(F("Day ")); display.print(pgm_read_word(&TRACK_DAY[idx]));
-  textAt(80, 34, F("Cape Cod"));
-  textAt(0, 54, F("NYC"));
-  if (JOURNEY_IS_PLACEHOLDER) textAt(40, 54, F("(sample)"));
-  else                        textAt(34, 54, F("Tagged Aug 2026"));
+  textAt(0, 4, F("Lucky"));                  // header (yellow band)
+  display.setCursor(80, 4); display.print(F("Day ")); display.print(pgm_read_word(&TRACK_DAY[idx]));
+  textAt(80, 40, F("Cape Cod"));
+  textAt(0, 56, F("NYC"));
+  if (JOURNEY_IS_PLACEHOLDER) textAt(40, 56, F("(sample)"));
+  else                        textAt(34, 56, F("Tagged Aug 2026"));
 }

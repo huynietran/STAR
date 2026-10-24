@@ -70,7 +70,7 @@ bool updateCrab() {
       if (f.alive) continue;
       f.alive = true;
       f.x = random(0, SCREEN_W - 8);
-      f.y = 8;
+      f.y = BODY_Y;                         // start below the yellow header
       f.kind = random(100) < 25 ? 1 : 0;   // 25% plastic
       break;
     }
@@ -104,15 +104,15 @@ bool updateCrab() {
 void drawCrab() {
   CrabGame& g = game.crab;
   if (g.over) {
-    display.setCursor(10, 12); display.print(F("Crabs eaten: ")); display.print(g.crabs);
+    display.setCursor(10, 4);  display.print(F("Crabs eaten: ")); display.print(g.crabs);
     display.setCursor(10, 24); display.print(F("Plastic:     ")); display.print(g.bags);
     if (g.bags) textAt(10, 42, F("Plastic isn't food!"));
     else        textAt(10, 42, F("Great hunting!"));
     return;
   }
-  display.setCursor(0, 0); display.print(F("Crabs ")); display.print(g.crabs);
+  display.setCursor(0, 4); display.print(F("Crabs ")); display.print(g.crabs);
   unsigned long left = (GAME_SECONDS * 1000UL - (millis() - g.startMs)) / 1000;
-  display.setCursor(104, 0); display.print(left); display.print('s');
+  display.setCursor(104, 4); display.print(left); display.print('s');
   bool f2 = (millis() / 300) % 2;   // swap animation frames every 0.3 s
   for (Faller& f : g.items) {
     if (!f.alive) continue;
@@ -126,10 +126,10 @@ void drawCrab() {
 void startNet() {
   memset(&game, 0, sizeof(game));
   NetGame& g = game.net;
-  g.y = 30;
+  g.y = 34;
   for (uint8_t i = 0; i < 3; i++) {
     g.nets[i].x = SCREEN_W + i * NET_SPACING;
-    g.nets[i].gapY = random(12, SCREEN_H - NET_GAP);
+    g.nets[i].gapY = random(BODY_Y + 2, SCREEN_H - NET_GAP);
   }
   g.startMs = millis();
 }
@@ -150,13 +150,13 @@ bool updateNet() {
   if (g.over) return now - g.overMs > 2500;   // result screen, then done
 
   g.y += btnB.down ? -2 : 1;                  // swim up while B is held, else sink
-  g.y = constrain(g.y, 10, SCREEN_H - 8);
+  g.y = constrain(g.y, BODY_Y, SCREEN_H - 8);
 
   for (Net& n : g.nets) {
     n.x -= NET_SPEED;
     if (n.x < -4) {                           // off screen: recycle it on the right
       n.x += 3 * NET_SPACING;
-      n.gapY = random(12, SCREEN_H - NET_GAP);
+      n.gapY = random(BODY_Y + 2, SCREEN_H - NET_GAP);
       n.passed = false;
     }
     bool sameColumn = n.x < SWIM_X + 16 && n.x + 4 > SWIM_X;
@@ -178,20 +178,20 @@ void drawNetColumn(int16_t x, int16_t y0, int16_t y1) {   // a strip of mesh fro
 void drawNet() {
   NetGame& g = game.net;
   if (g.over) {
-    textAt(4, 2, g.caught ? F("Caught in a net!") : F("You made it!"));
-    display.setCursor(4, 16); display.print(F("Nets passed: ")); display.print(g.score);
+    textAt(4, 4, g.caught ? F("Caught in a net!") : F("You made it!"));
+    display.setCursor(4, 20); display.print(F("Nets passed: ")); display.print(g.score);
     textAt(4, 34, F("Nets trap turtles."));
     textAt(4, 44, F("Escape hatches"));
     textAt(4, 54, F("(TEDs) save them."));
     return;
   }
-  display.setCursor(0, 0); display.print(F("Nets ")); display.print(g.score);
+  display.setCursor(0, 4); display.print(F("Nets ")); display.print(g.score);
   unsigned long left = (GAME_SECONDS * 1000UL - (millis() - g.startMs)) / 1000;
-  display.setCursor(104, 0); display.print(left); display.print('s');
-  display.drawFastHLine(0, 9, SCREEN_W, SSD1306_WHITE);   // water surface
+  display.setCursor(104, 4); display.print(left); display.print('s');
+  display.drawFastHLine(0, HEADER_H, SCREEN_W, SSD1306_WHITE);   // water surface, just below the header
   for (Net& n : g.nets) {
     if (n.x > SCREEN_W) continue;
-    drawNetColumn(n.x, 10, n.gapY);
+    drawNetColumn(n.x, BODY_Y, n.gapY);
     drawNetColumn(n.x, n.gapY + NET_GAP, SCREEN_H);
   }
   bool f = (millis() / 300) % 2;

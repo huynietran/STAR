@@ -152,10 +152,10 @@ void updateScreen() {
 // ---------------- Drawing ----------------
 // Four 8x8 stat icons, each followed by its bar: health, happiness, food, comfort.
 void drawStatBars() {
-  drawSprite(0,  0, SPR_ICON_HEALTH,  8, 8, 1); drawBar(10,  1, pet.health);
-  drawSprite(32, 0, SPR_ICON_HAPPY,   8, 8, 1); drawBar(42,  1, pet.happy);
-  drawSprite(64, 0, SPR_ICON_FOOD,    8, 8, 1); drawBar(74,  1, pet.hunger);
-  drawSprite(96, 0, SPR_ICON_COMFORT, 8, 8, 1); drawBar(106, 1, pet.comfort);
+  drawSprite(0,  4, SPR_ICON_HEALTH,  8, 8, 1); drawBar(10,  5, pet.health);
+  drawSprite(32, 4, SPR_ICON_HAPPY,   8, 8, 1); drawBar(42,  5, pet.happy);
+  drawSprite(64, 4, SPR_ICON_FOOD,    8, 8, 1); drawBar(74,  5, pet.hunger);
+  drawSprite(96, 4, SPR_ICON_COMFORT, 8, 8, 1); drawBar(106, 5, pet.comfort);
 }
 
 // The mood bubble beside the turtle. Most urgent first; nullptr = no bubble.
@@ -213,18 +213,18 @@ void drawEgg() {
   uint16_t left = EGG_SECONDS - pet.eggSeconds;
   // Cracks appear in the last quarter, and spread in the last twelfth, of incubation
   const uint8_t* spr = left <= EGG_SECONDS / 12 + 1 ? SPR_EGG_CRACK_1 : (left <= EGG_SECONDS / 4 ? SPR_EGG_CRACK_0 : SPR_EGG);
-  drawSprite(48 + wobble, 10, spr, 16, 16, 2);   // drawn 2x: 32x32 on screen
+  drawSprite(48 + wobble, 18, spr, 16, 16, 2);   // drawn 2x: 32x32 on screen, below the header
   // Tell the player when warming the nest sensor counts (pinch it to warm it)
-  if (inSexWindow())                          textAt(10, 0, F("Warm=girl Cool=boy"));
-  else if (pet.eggSeconds < EGG_SECONDS / 3)  textAt(28, 0, F("Incubating..."));
-  else                                        textAt(16, 0, F("Almost hatching!"));
-  display.setCursor(28, 46); display.print(F("Nest ")); printTenths(env.nest10); display.print(F(" C"));
+  if (inSexWindow())                          textAt(10, 4, F("Warm=girl Cool=boy"));
+  else if (pet.eggSeconds < EGG_SECONDS / 3)  textAt(28, 4, F("Incubating..."));
+  else                                        textAt(16, 4, F("Almost hatching!"));
+  display.setCursor(40, 56); display.print(F("Nest ")); printTenths(env.nest10); display.print(F(" C"));
   drawStatusCorner();
 }
 
 void drawMenu() {
   drawStatBars();
-  drawTurtle(64, 30);
+  drawTurtle(64, 33);
   display.fillRect(0, 52, SCREEN_W, 12, SSD1306_WHITE);
   display.setTextColor(SSD1306_BLACK);
   display.setCursor(4, 54);
@@ -242,12 +242,12 @@ const __FlashStringHelper* stageName() {
 }
 
 void drawStats() {
-  display.setCursor(0, 0);  display.print(F("Health  ")); display.print(pet.health);
-  display.setCursor(0, 10); display.print(F("Happy   ")); display.print(pet.happy);
-  display.setCursor(0, 20); display.print(F("Fed     ")); display.print(pet.hunger);
-  display.setCursor(0, 30); display.print(F("Comfort ")); display.print(pet.comfort);
-  display.setCursor(0, 42); display.print(stageName()); display.print(pet.female ? F(", female") : F(", male"));
-  display.setCursor(0, 54); display.print(F("Care ")); display.print(careScore());
+  display.setCursor(0, 4);  display.print(stageName()); display.print(pet.female ? F(", female") : F(", male"));
+  display.setCursor(0, 20); display.print(F("Health  ")); display.print(pet.health);
+  display.setCursor(0, 29); display.print(F("Happy   ")); display.print(pet.happy);
+  display.setCursor(0, 38); display.print(F("Fed     ")); display.print(pet.hunger);
+  display.setCursor(0, 47); display.print(F("Comfort ")); display.print(pet.comfort);
+  display.setCursor(0, 56); display.print(F("Care ")); display.print(careScore());
   display.print(F("  grow ")); display.print(pet.stageSeconds); display.print('/'); display.print(STAGE_SECONDS);
 }
 
@@ -279,27 +279,27 @@ void drawAlert() {
   display.setTextSize(1);
   switch (shownAlert) {
     case ALERT_HATCHED:
-      textAt(0, 0, F("It hatched!"));
-      textAt(0, 14, pet.female ? F("It's a girl!") : F("It's a boy!"));
-      display.setCursor(0, 28); display.print(F("Nest avg ")); printTenths(pet.nestAvg10); display.print(F(" C"));
-      textAt(0, 42, F("Warm nest = females"));
-      textAt(0, 52, F("Cool nest = males"));
+      textAt(0, 4, F("It hatched!"));
+      textAt(0, 20, pet.female ? F("It's a girl!") : F("It's a boy!"));
+      display.setCursor(0, 32); display.print(F("Nest avg ")); printTenths(pet.nestAvg10); display.print(F(" C"));
+      textAt(0, 45, F("Warm nest = females"));
+      textAt(0, 55, F("Cool nest = males"));
       break;
-    case ALERT_GREW:       textAt(0, 10, F("Growing up!")); display.setCursor(0, 26); display.print(F("Now a ")); display.print(stageName()); break;
-    case ALERT_HOT:        textAt(0, 10, F("Hot out there!")); textAt(0, 26, F("Find shade and")); textAt(0, 36, F("drink water.")); break;
-    case ALERT_DANGER_HOT: textAt(0, 10, F("DANGER: heat!")); textAt(0, 26, F("Get out of the sun")); textAt(0, 36, F("right now.")); break;
-    case ALERT_SUNSCREEN:  textAt(0, 10, F("Reapply sunscreen!")); textAt(0, 26, F("Menu > Sunscreen")); break;
-    case ALERT_DIRTY:      textAt(0, 10, F("Murky water!")); textAt(0, 26, F("I feel sick...")); break;
-    case ALERT_RESCUED:    textAt(0, 10, F("Rescued!")); textAt(0, 26, F("Off to turtle rehab")); break;
-    case ALERT_RELEASED:   textAt(0, 10, F("Released!")); textAt(0, 26, F("Back in the Gulf")); break;
+    case ALERT_GREW:       textAt(0, 4, F("Growing up!")); display.setCursor(0, 24); display.print(F("Now a ")); display.print(stageName()); break;
+    case ALERT_HOT:        textAt(0, 4, F("Hot out there!")); textAt(0, 24, F("Find shade and")); textAt(0, 34, F("drink water.")); break;
+    case ALERT_DANGER_HOT: textAt(0, 4, F("DANGER: heat!")); textAt(0, 24, F("Get out of the sun")); textAt(0, 34, F("right now.")); break;
+    case ALERT_SUNSCREEN:  textAt(0, 4, F("Reapply sunscreen!")); textAt(0, 24, F("Menu > Sunscreen")); break;
+    case ALERT_DIRTY:      textAt(0, 4, F("Murky water!")); textAt(0, 24, F("I feel sick...")); break;
+    case ALERT_RESCUED:    textAt(0, 4, F("Rescued!")); textAt(0, 24, F("Off to turtle rehab")); break;
+    case ALERT_RELEASED:   textAt(0, 4, F("Released!")); textAt(0, 24, F("Back in the Gulf")); break;
     default: break;
   }
 }
 
 void drawRescue() {
-  display.fillRect(57, 6, 14, 30, SSD1306_WHITE);   // rescue cross
-  display.fillRect(49, 14, 30, 14, SSD1306_WHITE);
-  textAt(10, 42, F("Turtle rehab center"));
+  textAt(7, 4, F("Turtle rehab center"));
+  display.fillRect(57, 20, 14, 26, SSD1306_WHITE);   // rescue cross, below the header
+  display.fillRect(49, 26, 30, 14, SSD1306_WHITE);
   display.setCursor(10, 54); display.print(F("Recovering: ")); display.print(pet.rescueSeconds); display.print('s');
 }
 
@@ -317,7 +317,7 @@ void drawScreen() {
     case SCR_GAME_CRAB: drawCrab(); break;
     case SCR_GAME_NET:  drawNet(); break;
     case SCR_ALERT:     drawAlert(); break;
-    case SCR_MESSAGE:   if (msg1) textAt(0, 20, msg1); if (msg2) textAt(0, 34, msg2); break;
+    case SCR_MESSAGE:   if (msg1) textAt(0, 4, msg1); if (msg2) textAt(0, 24, msg2); break;
     case SCR_RESCUE:    drawRescue(); break;
   }
   display.display();

@@ -8,6 +8,11 @@
 
 // The library allocates a 1,024-byte frame buffer at begin(); the compiler's
 // "Global variables use X bytes" does NOT include it. Keep that figure under ~750.
+// Two-color OLEDs light the top 16 rows yellow and the rest blue (fixed in the glass).
+// Layout rule: rows 0-15 are the header (titles, scores, stats); content starts at row 17.
+const uint8_t HEADER_H = 16;
+const uint8_t BODY_Y   = 17;
+
 Adafruit_SSD1306 display(SCREEN_W, SCREEN_H, &Wire, -1);
 
 // Draw a 1-bit PROGMEM bitmap, optionally pixel-doubled (scale 2, 3...).
