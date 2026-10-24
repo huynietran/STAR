@@ -43,7 +43,7 @@ Hardware hackathon project, demo on Sunday, Oct 25, 2026.
 | `turtle_board/games.h` | Crab Catch and Net Escape (both done) | Games, art and sound |
 | `turtle_board/sprites.h` | Placeholder sprites, replace with real art | Games, art and sound |
 | `turtle_board/sound.h` | Non-blocking jingles | Games, art and sound |
-| `turtle_board/journey.h`, `journey_data.h` | Journey map page (placeholder route) | Games + Build/story |
+| `turtle_board/journey.h`, `journey_data.h` | Journey map page (Lucky's real track) | Games + Build/story |
 | `reef_station/reef_station.ino` | All sensors, verdicts, LCD, LEDs, link sender | Reef Station |
 | `reef_station/config.h` | Pins, calibration values, `NO_SALT_SENSOR`, `CAL_MODE` and DIY sensor switches | Reef Station |
 | `docs/` | Pin map, link protocol, calibration, demo-day checklist | Everyone |
@@ -103,7 +103,7 @@ Should (Friday, 9 pm freeze)
 - [x] Traffic-light LEDs and laptop graph
 - [x] Net Escape game
 - [ ] Real sprites and sounds
-- [ ] Real tracked-turtle journey data
+- [x] Real tracked-turtle journey data (Lucky)
 - [ ] Calibration values filled in
 
 Could
@@ -140,14 +140,14 @@ The team's Sprite Guide doc has the full list and step-by-step instructions.
 
 ## Journey data
 
-`journey_data.h` holds a **placeholder** route along the coast, not a real track.
-To use a real one:
+The journey page follows **Lucky**, a real Kemp's ridley tagged in August 2026 at the
+eastern tip of Massachusetts: 12 weekly positions (days 0–77) from Cape Cod through Long
+Island Sound toward New York City. To swap in a different track:
 
-1. On seaturtle.org's tracking pages, open the Padre Island National Seashore Kemp's
-   ridley project and choose a turtle.
-2. Put about 12 positions in a CSV (`day,lat,lon`), like `tools/sample_track.csv`.
-3. Run `python3 tools/journey_to_progmem.py track.csv tools/sample_coast.csv > turtle_board/journey_data.h`
-4. Set `JOURNEY_IS_PLACEHOLDER` to `false` in `journey.h`.
+1. Put the positions in a CSV (`day,lat,lon`), like `tools/sample_track.csv`.
+2. Set the map bounds at the top of `tools/journey_to_progmem.py` to frame the route.
+3. Run `python3 tools/journey_to_progmem.py track.csv coast.csv > turtle_board/journey_data.h`
+4. Update the name, date and place labels in `drawJourney()` in `journey.h`.
 
 ## Tests
 
