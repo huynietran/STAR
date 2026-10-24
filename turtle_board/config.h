@@ -27,7 +27,7 @@ const unsigned long LINK_TIMEOUT_MS = 5000;  // no data this long = pause enviro
 const unsigned long COMBO_HOLD_MS   = 3000;  // hold time for two-button combos
 
 #if DEMO
-const uint16_t EGG_SECONDS       = 60;
+const uint16_t EGG_SECONDS       = 20;    // nest window (sex is set) = seconds 6-13
 const uint16_t STAGE_SECONDS     = 90;    // seconds of good care per growth stage
 const uint16_t RESCUE_SECONDS    = 60;
 const uint16_t SUNSCREEN_SECONDS = 20;    // stands in for 2 hours (short to fit the 4-minute demo)

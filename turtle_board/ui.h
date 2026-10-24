@@ -211,7 +211,8 @@ void drawEgg() {
   uint16_t period = map(pet.eggSeconds, 0, EGG_SECONDS, 600, 120);   // wobbles faster near hatching
   int16_t wobble = (millis() / period) % 2 ? 1 : -1;
   uint16_t left = EGG_SECONDS - pet.eggSeconds;
-  const uint8_t* spr = left <= 5 ? SPR_EGG_CRACK_1 : (left <= 15 ? SPR_EGG_CRACK_0 : SPR_EGG);
+  // Cracks appear in the last quarter, and spread in the last twelfth, of incubation
+  const uint8_t* spr = left <= EGG_SECONDS / 12 + 1 ? SPR_EGG_CRACK_1 : (left <= EGG_SECONDS / 4 ? SPR_EGG_CRACK_0 : SPR_EGG);
   drawSprite(48 + wobble, 10, spr, 16, 16, 2);   // drawn 2x: 32x32 on screen
   // Tell the player when warming the nest sensor counts (pinch it to warm it)
   if (inSexWindow())                          textAt(10, 0, F("Warm=girl Cool=boy"));

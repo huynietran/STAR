@@ -5,10 +5,10 @@ bottom: date and time, who ran it, pass or fail, and a note on anything odd.
 
 ## Turtle Board alone (`SIM_ENV 1`)
 
-- [ ] Egg appears on power-up; top line changes Incubating... → Warm=girl Cool=boy → Almost hatching!
-- [ ] Egg cracks, then hatches at 60 s with the ding and a girl/boy screen
+- [ ] Egg appears on power-up; top line changes Incubating... (0–6 s) → Warm=girl Cool=boy (6–13 s) → Almost hatching!
+- [ ] Egg cracks, then hatches at 20 s with the ding and a girl/boy screen
 - [ ] Buttons: A opens and cycles the menu, B selects, C goes back
-- [ ] Crab Catch: crabs raise Food, a plastic bag lowers Health, round ends at 30 s
+- [ ] Crab Catch: crabs raise Food, a plastic bag lowers Health, round ends at 20 s
 - [ ] Net Escape: hold B to rise, nets passed are counted, end screen mentions TEDs
 - [ ] Hold B + C for 3 s: cycles calm, dirty water, heat + sun, warm nest
 - [ ] Dirty-water scenario: sick bubble shows, Health falls
@@ -30,9 +30,9 @@ bottom: date and time, who ran it, pass or fail, and a note on anything odd.
 
 - [ ] No `NO SIG`; unplugging the link wire shows it within 5 s and Health stops changing
 - [ ] Runoff makes the turtle sick within a few seconds
-- [ ] Pinching the nest sensor while the screen says Warm=girl Cool=boy → girl;
+- [ ] Pinching the nest sensor from the moment the egg appears until it hatches → girl;
       not touching it → boy (try each twice)
-- [ ] Flashlight held on the light sensor for 2 min → sunscreen reminder; Menu → Sunscreen clears it
+- [ ] Flashlight held on the light sensor for 20 s → sunscreen reminder; Menu → Sunscreen clears it
 
 ## Demo readiness
 
