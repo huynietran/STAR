@@ -67,9 +67,9 @@ float saltFromRaw(int r) {
 #endif
 
 void sampleSensors() {
-#if USE_DIY_SALT
+#if USE_SALT && USE_DIY_SALT
   saltRaw.add(readSaltProbe());
-#else
+#elif USE_SALT
   saltRaw.add(analogRead(PIN_TDS));
 #endif
 
@@ -108,13 +108,13 @@ void computeValues() {
   if (t > -100) waterC = t;   // -127 means no probe found
   waterProbe.requestTemperatures();
 
-  bool dry, salty;
-#if USE_DIY_SALT
+  bool dry = false, salty = true;   // no salt sensor: never "no sample", never "fresh"
+#if USE_SALT && USE_DIY_SALT
   int r = saltRaw.get();
   dry = r < SALT_DRY_RAW;
   salPpt = dry ? 0 : saltFromRaw(r);
   salty = salPpt >= SAL_SALTY_MIN;
-#else
+#elif USE_SALT
   // DFRobot SEN0244 conversion with temperature compensation
   float v = saltRaw.get() * VREF / 1023.0;
   float comp = v / (1.0 + 0.02 * (waterC - 25.0));
@@ -135,6 +135,7 @@ void computeValues() {
   nestC = (nestRaw.get() * VREF / 1023.0 - 0.5) * 100.0 + NEST_OFFSET_C;
   heatF = heatBaseF + SUN_HEAT_BONUS_F * sunPct / 100.0;
 
+  // Without a salt sensor (USE_SALT 0) the verdict comes from cloudiness alone.
   if (dry)                        wq = WQ_NO_SAMPLE;
   else if (cloud >= CLOUD_AVOID)  wq = WQ_AVOID;
   else if (cloud >= CLOUD_CAUTION || !salty) wq = WQ_CAUTION;   // fresh water at a beach = runoff
@@ -150,12 +151,12 @@ void setLights() {
 
 // One line, docs/link-protocol.md. Also readable by the Arduino Serial Plotter.
 void sendLine() {
-#if USE_DIY_SALT
-  Serial.print(F("sal:"));     Serial.print(salPpt, 1);
-#else
-  Serial.print(F("tds:"));     Serial.print(tds);
+#if USE_SALT && USE_DIY_SALT
+  Serial.print(F("sal:"));     Serial.print(salPpt, 1); Serial.print(',');
+#elif USE_SALT
+  Serial.print(F("tds:"));     Serial.print(tds);       Serial.print(',');
 #endif
-  Serial.print(F(",cloud:"));  Serial.print(cloud);
+  Serial.print(F("cloud:"));   Serial.print(cloud);
   Serial.print(F(",water:"));  Serial.print(waterC, 1);
   Serial.print(F(",air:"));    Serial.print(airC, 1);
   Serial.print(F(",rh:"));     Serial.print((int)rh);
@@ -166,7 +167,10 @@ void sendLine() {
 
 #if CAL_MODE
   // Raw numbers for docs/calibration.md. Uses '=' (no ':'), so the Turtle Board ignores it.
-  Serial.print(F("RAW salt="));  Serial.print(saltRaw.get());
+  Serial.print(F("RAW"));
+#if USE_SALT
+  Serial.print(F(" salt="));     Serial.print(saltRaw.get());
+#endif
 #if USE_DIY_CLOUD
   Serial.print(F(" cloudSignal=")); Serial.print(cloudRaw.get());
 #else
@@ -206,16 +210,22 @@ void showPage() {
       else { lcd.print(F("Cloudiness ")); lcd.print(cloud); lcd.print('%'); }
       break;
     case 1: {
-#if USE_DIY_SALT
+#if !USE_SALT
+      page = 2;                     // no salt sensor: skip this page
+      showPage();
+      return;
+#elif USE_DIY_SALT
       lcd.print(F("Sal ")); lcd.print(salPpt, 1); lcd.print(F(" ppt"));
       bool salty = salPpt >= SAL_SALTY_MIN;
 #else
       lcd.print(F("TDS ")); if (tds >= 1000) lcd.print('>'); lcd.print(tds); lcd.print(F(" ppm"));
       bool salty = tds > TDS_FRESH_MAX;
 #endif
+#if USE_SALT
       lcd.setCursor(0, 1);
       if (wq == WQ_NO_SAMPLE) lcd.print(F("Salt: --"));
       else lcd.print(salty ? F("Salt: SEAWATER") : F("Salt: FRESH"));
+#endif
       break;
     }
     case 2:
@@ -252,7 +262,7 @@ void setup() {
 #if USE_DIY_CLOUD
   pinMode(PIN_DIY_CLOUD_LED, OUTPUT);
 #endif
-#if USE_DIY_SALT
+#if USE_SALT && USE_DIY_SALT
   pinMode(PIN_SALT_DRIVE_A, OUTPUT);
   pinMode(PIN_SALT_DRIVE_B, OUTPUT);
 #endif

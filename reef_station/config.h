@@ -5,6 +5,8 @@
 #include <Arduino.h>
 
 // ---------- Which water sensors are installed ----------
+#define USE_SALT      0   // 0 = no salt sensor: swim light from cloudiness only (current demo)
+                            // 1 = a salt sensor is installed (TDS, or DIY with USE_DIY_SALT)
 #define USE_DIY_CLOUD 0   // 1 = LED + photoresistor cup instead of the turbidity sensor
 #define USE_DIY_SALT  0   // 1 = two-screw salt probe instead of the TDS sensor
 

@@ -10,7 +10,7 @@ tds:245,cloud:12,water:22.4,air:29.1,rh:55,sun:78,hi:88,nest:30.5,wq:0
 
 | Key | Meaning | Units and range |
 | --- | --- | --- |
-| `tds` | Dissolved salts (TDS sensor) | ppm, 0–1000; 1000 = at or over the sensor's limit |
+| `tds` | Dissolved salts (TDS sensor). Not sent when `USE_SALT 0` (current demo). | ppm, 0–1000; 1000 = at or over the sensor's limit |
 | `sal` | Salinity (DIY salt probe, sent instead of `tds`) | ppt, 0 to about 40 |
 | `cloud` | Cloudiness vs. clear-water baseline | %, 0–100 |
 | `water` | Water temperature | °C, one decimal |

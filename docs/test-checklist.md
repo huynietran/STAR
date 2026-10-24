@@ -21,8 +21,8 @@ bottom: date and time, who ran it, pass or fail, and a note on anything odd.
 
 - [ ] LCD cycles through all 5 pages
 - [ ] Serial Monitor shows one line per second (`CAL_MODE 0`: no RAW lines)
-- [ ] Probe in air: NO SAMPLE, all LEDs off
-- [ ] Tap → yellow, Gulf (35 g/L salt) → green, Runoff → red
+- [ ] Probe resting in the Clean cup: green light, CLEAN on the LCD
+- [ ] Clean tap water → green, Slightly cloudy → yellow, Runoff → red
 - [ ] Phone flashlight on the light sensor raises Sun %
 - [ ] Pinching the TMP36 raises Nest above 30 °C within about 15 s
 
@@ -38,7 +38,7 @@ bottom: date and time, who ran it, pass or fail, and a note on anything odd.
 
 - [ ] Full demo story fits in 4 minutes (use A + B to skip a stage if it runs long)
 - [ ] Both boards run on power banks, no laptop, for 30+ minutes without resetting
-- [ ] Reset for the next judge (A + C, rinse probe, probe in air) takes under 30 s
+- [ ] Reset for the next judge (A + C, rinse the probe, back in the Clean cup) takes under 30 s
 - [ ] Backup video recorded and saved on two laptops
 
 ## Run log
