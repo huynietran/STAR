@@ -5,7 +5,7 @@
 
 // ---------- Build switches ----------
 #define DEMO     1   // 1 = short demo timings for judging, 0 = "real-time" timings
-#define SIM_ENV  1   // 1 = fake sensor data (no Reef Station needed), 0 = read the link wire
+#define SIM_ENV  0   // 1 = fake sensor data (no Reef Station needed), 0 = read the link wire
 
 // ---------- Pins ----------
 const uint8_t PIN_BTN_A   = 2;   // A: next / open menu
