@@ -5,10 +5,13 @@
 #include <Arduino.h>
 
 // ---------- Which water sensors are installed ----------
-#define USE_SALT      0   // 0 = no salt sensor: swim light from cloudiness only (current demo)
-                            // 1 = a salt sensor is installed (TDS, or DIY with USE_DIY_SALT)
 #define USE_DIY_CLOUD 0   // 1 = LED + photoresistor cup instead of the turbidity sensor
 #define USE_DIY_SALT  0   // 1 = two-screw salt probe instead of the TDS sensor
+#define NO_SALT_SENSOR 1  // 1 = no salt sensor at all: the verdict comes from cloudiness only
+                          //     (clear = CLEAN, slightly cloudy = CAUTION, murky = AVOID)
+#define SIM_SALT 0        // with NO_SALT_SENSOR: a pushbutton picks the salt reading for the demo.
+                          //     The LCD marks it "(sim)". Each press toggles SEAWATER / FRESH.
+const uint8_t PIN_SIM_SALT_BTN = 9;   // pushbutton between D9 and GND (no resistor needed)
 
 // ---------- Pins ----------
 const uint8_t LCD_RS = 12, LCD_E = 11, LCD_D4 = 5, LCD_D5 = 4, LCD_D6 = 3, LCD_D7 = 2;
@@ -68,4 +71,4 @@ const unsigned long PAGE_MS   = 3000;
 // 1 = also print a "RAW ..." line every second with the numbers the calibration
 // session needs (docs/calibration.md). The Turtle Board ignores that line.
 // Set back to 0 after calibrating.
-#define CAL_MODE 0
+#define CAL_MODE 1
