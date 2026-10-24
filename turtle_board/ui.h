@@ -16,7 +16,7 @@
 
 enum Screen : uint8_t {
   SCR_EGG, SCR_HOME, SCR_MENU, SCR_STATS, SCR_WATER, SCR_JOURNEY,
-  SCR_GAME_CRAB, SCR_ALERT, SCR_MESSAGE, SCR_RESCUE
+  SCR_GAME_CRAB, SCR_GAME_NET, SCR_ALERT, SCR_MESSAGE, SCR_RESCUE
 };
 Screen screen = SCR_EGG;
 
@@ -64,7 +64,7 @@ void printMenuName(uint8_t i) {
 void selectMenu() {
   switch (menuIndex) {
     case M_FEED:      startCrab(); screen = SCR_GAME_CRAB; break;
-    case M_PLAY:      showMessage(F("Net Escape"), F("TODO: games.h")); break;
+    case M_PLAY:      startNet(); screen = SCR_GAME_NET; break;
     case M_PET:       petTurtle(); break;
     case M_STATS:     screen = SCR_STATS; break;
     case M_WATER:     screen = SCR_WATER; break;
@@ -107,7 +107,7 @@ void updateScreen() {
 #endif
 
   // Alerts interrupt everything except a game in progress
-  if (pendingAlert != ALERT_NONE && screen != SCR_GAME_CRAB && screen != SCR_ALERT) {
+  if (pendingAlert != ALERT_NONE && screen != SCR_GAME_CRAB && screen != SCR_GAME_NET && screen != SCR_ALERT) {
     shownAlert = pendingAlert;
     pendingAlert = ALERT_NONE;
     screen = SCR_ALERT;
@@ -135,6 +135,9 @@ void updateScreen() {
       break;
     case SCR_GAME_CRAB:
       if (updateCrab()) goHome();
+      break;
+    case SCR_GAME_NET:
+      if (updateNet()) goHome();
       break;
     case SCR_ALERT:
     case SCR_MESSAGE:
@@ -210,7 +213,10 @@ void drawEgg() {
   uint16_t left = EGG_SECONDS - pet.eggSeconds;
   const uint8_t* spr = left <= 5 ? SPR_EGG_CRACK_1 : (left <= 15 ? SPR_EGG_CRACK_0 : SPR_EGG);
   drawSprite(48 + wobble, 10, spr, 16, 16, 2);   // drawn 2x: 32x32 on screen
-  textAt(28, 0, F("Incubating..."));
+  // Tell the player when warming the nest sensor counts (pinch it to warm it)
+  if (inSexWindow())                          textAt(10, 0, F("Warm=girl Cool=boy"));
+  else if (pet.eggSeconds < EGG_SECONDS / 3)  textAt(28, 0, F("Incubating..."));
+  else                                        textAt(16, 0, F("Almost hatching!"));
   display.setCursor(28, 46); display.print(F("Nest ")); printTenths(env.nest10); display.print(F(" C"));
   drawStatusCorner();
 }
@@ -274,8 +280,8 @@ void drawAlert() {
       textAt(0, 0, F("It hatched!"));
       textAt(0, 14, pet.female ? F("It's a girl!") : F("It's a boy!"));
       display.setCursor(0, 28); display.print(F("Nest avg ")); printTenths(pet.nestAvg10); display.print(F(" C"));
-      textAt(0, 42, F("Warm sand = females"));
-      textAt(0, 52, F("Cool sand = males"));
+      textAt(0, 42, F("Warm nest = females"));
+      textAt(0, 52, F("Cool nest = males"));
       break;
     case ALERT_GREW:       textAt(0, 10, F("Growing up!")); display.setCursor(0, 26); display.print(F("Now a ")); display.print(stageName()); break;
     case ALERT_HOT:        textAt(0, 10, F("Hot out there!")); textAt(0, 26, F("Find shade and")); textAt(0, 36, F("drink water.")); break;
@@ -307,6 +313,7 @@ void drawScreen() {
     case SCR_WATER:     drawWater(); break;
     case SCR_JOURNEY:   drawJourney(); break;
     case SCR_GAME_CRAB: drawCrab(); break;
+    case SCR_GAME_NET:  drawNet(); break;
     case SCR_ALERT:     drawAlert(); break;
     case SCR_MESSAGE:   if (msg1) textAt(0, 20, msg1); if (msg2) textAt(0, 34, msg2); break;
     case SCR_RESCUE:    drawRescue(); break;

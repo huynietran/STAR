@@ -26,6 +26,19 @@ int main() {
   int temps[] = {270, 300, 315};
   for (int t : temps) { int f = 0; for (int i = 0; i < 2000; i++) { newEgg(); env.nest10 = t; tick(EGG_SECONDS); f += pet.female; }
     printf("nest %.1f C -> %d%% female\n", t / 10.0, f * 100 / 2000); }
+  // only the middle third of incubation decides sex: warm only then -> mostly female
+  { int f = 0;
+    for (int i = 0; i < 1000; i++) {
+      newEgg();
+      for (int s = 0; s < EGG_SECONDS; s++) { env.nest10 = inSexWindow() ? 330 : 220; tick(1); }
+      f += pet.female; }
+    printf("warm only in middle third -> %d%% female\n", f / 10); CHECK(f > 900); }
+  { int f = 0;
+    for (int i = 0; i < 1000; i++) {
+      newEgg();
+      for (int s = 0; s < EGG_SECONDS; s++) { env.nest10 = inSexWindow() ? 220 : 330; tick(1); }
+      f += pet.female; }
+    printf("warm only outside middle third -> %d%% female\n", f / 10); CHECK(f < 100); }
   // ignored vs. active player, calm conditions, 10 minutes after hatching
   for (int active = 0; active < 2; active++) {
     newEgg(); env.nest10 = 300; env.wq = WQ_CLEAN; env.sun = 10; env.heatIndexF = 78; tick(EGG_SECONDS);

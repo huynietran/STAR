@@ -27,7 +27,7 @@ board's `config.h` in the same commit.
 | A0 | TDS sensor output | 0–2.3 V |
 | A1 | Turbidity sensor output | Board switch on "A". Only the probe tip goes in water. |
 | A2 | Photoresistor divider | Photoresistor 5 V → A2, 10 kΩ A2 → GND |
-| A3 | TMP36 output (in the egg prop) | Flat face toward you: left 5 V, middle signal, right GND |
+| A3 | TMP36 "nest" sensor, at the breadboard edge so judges can pinch it | Flat face toward you: left 5 V, middle signal, right GND. Pinching it warms the nest; only the middle third of the egg stage counts. |
 | D7 | DHT11 data | Bare 4-pin DHT11 needs 10 kΩ to 5 V; modules have it |
 | D8 | DS18B20 data | 4.7 kΩ pull-up to 5 V |
 | D1 (TX) | 1 kΩ → Turtle Board D8 | Same data also goes to the laptop over USB |

@@ -95,6 +95,13 @@ int heatPenalty() {
   return 0;
 }
 
+// Sea turtle sex is set during roughly the middle third of incubation (the
+// thermosensitive period), so only nest temperatures from then decide it.
+bool inSexWindow() {
+  return pet.stage == STAGE_EGG &&
+         pet.eggSeconds >= EGG_SECONDS / 3 && pet.eggSeconds < 2 * EGG_SECONDS / 3;
+}
+
 void applySunscreen() {
   pet.sunSeconds = 0;
   pet.sunscreenDue = false;
@@ -108,7 +115,8 @@ void petTick() {
   bool fresh = envFresh();
 
   if (pet.stage == STAGE_EGG) {
-    if (fresh) { pet.nestSum10 += env.nest10; pet.nestCount++; }
+    // Only the middle third of incubation counts, like the real thermosensitive period.
+    if (fresh && inSexWindow()) { pet.nestSum10 += env.nest10; pet.nestCount++; }
     if (++pet.eggSeconds >= EGG_SECONDS) hatch();
     return;
   }
