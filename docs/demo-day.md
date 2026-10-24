@@ -2,11 +2,11 @@
 
 ## Before judging starts
 
-- [ ] Both boards: `SIM_ENV 0`, `DEMO 1`, latest tagged version uploaded
+- [ ] Turtle Board: `SIM_ENV 0`, `DEMO 1`; Reef Station: `CAL_MODE 0`, `NO_SALT_SENSOR 1`; tagged version uploaded
 - [ ] Redo clear-water baseline and light threshold in this room
-- [ ] Mix fresh Tap, Gulf (35 g/L) and Runoff cups; label them
+- [ ] Mix fresh Clean (tap), Slightly cloudy and Runoff cups; label them
 - [ ] Laptop: Serial Plotter open on the Reef Station port
-- [ ] Hold A + C for 3 s: fresh egg in the sand under the lamp
+- [ ] Pinch test on the nest sensor; hold A + C for 3 s for a fresh egg
 - [ ] Volume check
 
 ## Roles during each demo
@@ -15,12 +15,13 @@ Driver (buttons) · Narrator · Water handler · Q&A lead
 
 ## Between judges
 
-- [ ] Rinse and dry the probe; leave it in air (`NO SAMPLE`)
+- [ ] Rinse the probe and rest it in the Clean cup (green light)
 - [ ] Hold A + C for 3 s to start a new egg
 - [ ] Top up cups if needed
 
 ## Kit
 
 Spare Uno · 3 USB cables · jumpers · resistors · tape · zip ties · 2 power banks ·
-salt · cups · distilled water · paper towels · lamp · flashlight · hair dryer ·
+soil · cups · drip tray · distilled water · paper towels · phone flashlight ·
+shell and tower prototypes ·
 extension cord · the backup video on a laptop

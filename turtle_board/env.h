@@ -16,7 +16,7 @@ struct Env {
   uint8_t  rh         = 50;    // %
   uint8_t  sun        = 0;     // %
   int16_t  heatIndexF = 77;    // F, sun-corrected by the Reef Station
-  int16_t  nest10     = 250;   // C x10, inside the egg prop
+  int16_t  nest10     = 250;   // C x10, nest sensor (pinched to warm)
   uint8_t  wq         = WQ_NO_SAMPLE;
   unsigned long lastSeen = 0;  // millis() of the last good line
 };
@@ -106,12 +106,13 @@ const uint8_t SIM_COUNT = 4;
 void simTick() {
   env.lastSeen = millis();
   env.rh = 55;
+  env.tds = 0;        // no salt sensor in the demo: no salt line on screen
   env.water10 = 240;
   switch (simScenario) {
-    case 0:  env.tds = 1000; env.cloud = 3;  env.wq = WQ_CLEAN; env.sun = 20; env.air10 = 260; env.heatIndexF = 79;  env.nest10 = 270; break;
-    case 1:  env.tds = 420;  env.cloud = 70; env.wq = WQ_AVOID; env.sun = 20; env.air10 = 260; env.heatIndexF = 79;  env.nest10 = 270; break;
-    case 2:  env.tds = 1000; env.cloud = 3;  env.wq = WQ_CLEAN; env.sun = 90; env.air10 = 340; env.heatIndexF = 104; env.nest10 = 300; break;
-    default: env.tds = 1000; env.cloud = 3;  env.wq = WQ_CLEAN; env.sun = 40; env.air10 = 300; env.heatIndexF = 86;  env.nest10 = 315; break;
+    case 0:  env.cloud = 3;  env.wq = WQ_CLEAN; env.sun = 20; env.air10 = 260; env.heatIndexF = 79;  env.nest10 = 270; break;
+    case 1:  env.cloud = 70; env.wq = WQ_AVOID; env.sun = 20; env.air10 = 260; env.heatIndexF = 79;  env.nest10 = 270; break;
+    case 2:  env.cloud = 3;  env.wq = WQ_CLEAN; env.sun = 90; env.air10 = 340; env.heatIndexF = 104; env.nest10 = 300; break;
+    default: env.cloud = 3;  env.wq = WQ_CLEAN; env.sun = 40; env.air10 = 300; env.heatIndexF = 86;  env.nest10 = 315; break;
   }
   env.cloud += (millis() / 1000) % 3;  // a little wobble so the numbers look alive
 }

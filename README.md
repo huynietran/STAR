@@ -3,7 +3,7 @@
 A two-Arduino virtual pet that teaches beach and sea-turtle care. You raise a
 Kemp's ridley, the smallest and most endangered sea turtle, from egg to adult on an
 OLED screen. Its health reacts to real readings from a sensor station that checks
-water cloudiness and salt, heat, sun and nest temperature.
+water cloudiness, heat, sun and nest temperature.
 
 Hardware hackathon project, demo on Sunday, Oct 25, 2026.
 
@@ -11,7 +11,7 @@ Hardware hackathon project, demo on Sunday, Oct 25, 2026.
 
 ```
  Water cups      Air         Sun             Nest
- TDS, turbidity  DHT11       photoresistor   TMP36 in egg prop
+ turbidity       DHT11       photoresistor   TMP36 (pinch to warm)
  DS18B20
       \            |            |             /
        v           v            v            v
@@ -40,12 +40,12 @@ Hardware hackathon project, demo on Sunday, Oct 25, 2026.
 | `turtle_board/pet.h` | Stats, hatching, growth, rescue | Turtle Brain |
 | `turtle_board/ui.h` | Screens, menu, alerts | Turtle Brain |
 | `turtle_board/screen.h` | OLED and drawing helpers | Turtle Brain |
-| `turtle_board/games.h` | Crab Catch (done), Net Escape (to build) | Games, art and sound |
+| `turtle_board/games.h` | Crab Catch and Net Escape (both done) | Games, art and sound |
 | `turtle_board/sprites.h` | Placeholder sprites, replace with real art | Games, art and sound |
 | `turtle_board/sound.h` | Non-blocking jingles | Games, art and sound |
 | `turtle_board/journey.h`, `journey_data.h` | Journey map page (placeholder route) | Games + Build/story |
 | `reef_station/reef_station.ino` | All sensors, verdicts, LCD, LEDs, link sender | Reef Station |
-| `reef_station/config.h` | Pins, calibration values, DIY sensor switches | Reef Station |
+| `reef_station/config.h` | Pins, calibration values, `NO_SALT_SENSOR`, `CAL_MODE` and DIY sensor switches | Reef Station |
 | `docs/` | Pin map, link protocol, calibration, demo-day checklist | Everyone |
 | `tools/` | Sprite and journey-map converters | Games / Build |
 | `tests/` | Laptop tests for the link parser and pet logic | Turtle Brain |
@@ -70,6 +70,7 @@ Hardware hackathon project, demo on Sunday, Oct 25, 2026.
 | Home | Open menu | Pet (+2 happiness) | — |
 | Menu | Next item | Select | Back |
 | Crab Catch | Move left (hold) | — | Move right (hold) |
+| Net Escape | — | Swim up (hold) | — |
 
 Hold for 3 seconds: **A + C** new egg · **A + B** next life stage · **B + C** next
 fake-data scenario (only with `SIM_ENV 1`).
@@ -92,12 +93,15 @@ Must (MVP, Wednesday night)
 - [ ] Everything wired and tested on real hardware
 - [ ] Boards linked: dirty water makes the turtle sick
 
+Demo setup (decided Saturday): no salt sensor (swim light from cloudiness only), no sand
+or egg prop (judges pinch the nest sensor), enclosures shown as prototype designs.
+
 Should (Friday, 9 pm freeze)
 - [x] Egg that hatches male/female by nest temperature
 - [x] Growth stages and rescue center
 - [x] Sunscreen timer and "Applied" menu item
 - [x] Traffic-light LEDs and laptop graph
-- [ ] Net Escape game
+- [x] Net Escape game
 - [ ] Real sprites and sounds
 - [ ] Real tracked-turtle journey data
 - [ ] Calibration values filled in
@@ -111,8 +115,8 @@ Could
 
 | Build | Flash (of 32,256) | Global RAM (of 2,048) |
 | --- | --- | --- |
-| Turtle Board, `SIM_ENV 0` | about 26.0 KB | about 720 bytes |
-| Reef Station | about 19.6 KB | about 430 bytes |
+| Turtle Board, `SIM_ENV 0` | about 28.3 KB | about 720 bytes |
+| Reef Station, no salt sensor | about 18 KB | about 430 bytes |
 
 The OLED library takes another 1,024 bytes of RAM at startup that the IDE doesn't
 show. **Keep the Turtle Board's "Global variables" under about 750 bytes.** If the
@@ -149,4 +153,5 @@ To use a real one:
 
 `sh tests/run.sh` (needs any C++ compiler) checks the link parser, the sex-from-
 temperature odds, growth timing for an ignored vs. an active player, rescue timing,
-and that a silent link never hurts the turtle.
+that only the middle third of incubation decides the sex, and that a silent link never
+hurts the turtle.
