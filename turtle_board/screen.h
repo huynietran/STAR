@@ -25,10 +25,12 @@ void drawSprite(int16_t x, int16_t y, const uint8_t* bmp, uint8_t w, uint8_t h, 
         display.fillRect(x + c * scale, y + r * scale, scale, scale, SSD1306_WHITE);
 }
 
-// 22x5 stat bar
+// 18x5 stat bar. Each stat gets a 32-px slot: icon (7) + gap (3) + bar (18) + gap (4),
+// so a bar never touches the next icon.
+const uint8_t BAR_W = 18;
 void drawBar(int16_t x, int16_t y, uint8_t value) {
-  display.drawRect(x, y, 22, 5, SSD1306_WHITE);
-  display.fillRect(x + 1, y + 1, (uint16_t)value * 20 / 100, 3, SSD1306_WHITE);
+  display.drawRect(x, y, BAR_W, 5, SSD1306_WHITE);
+  display.fillRect(x + 1, y + 1, (uint16_t)value * (BAR_W - 2) / 100, 3, SSD1306_WHITE);
 }
 
 // Print a value stored as tenths (e.g. 314 -> "31.4")

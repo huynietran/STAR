@@ -162,11 +162,19 @@ void setLights() {
   digitalWrite(PIN_LED_RED,    wq == WQ_AVOID);
 }
 
+// The Turtle Board's software serial port holds only 63 characters, and it can't empty
+// them while it's drawing a frame. A whole line sent at once (~64 characters) can overflow
+// it and lose the end of the line, which shows as NO SIG on and off. So the line goes out
+// one pair at a time with a short gap. Same bytes, just spread over about 0.3 s.
+const uint8_t PAIR_GAP_MS = 30;
+void pairGap() { Serial.flush(); delay(PAIR_GAP_MS); }
+
 // One line, docs/link-protocol.md. Also readable by the Arduino Serial Plotter.
 void sendLine() {
 #if NO_SALT_SENSOR
 #if SIM_SALT
   Serial.print(F("tds:"));     Serial.print(simSalty ? 1000 : 300);   // simulated
+  pairGap();
   Serial.print(F(",cloud:"));  Serial.print(cloud);
 #else
   Serial.print(F("cloud:"));   Serial.print(cloud);
@@ -177,18 +185,21 @@ void sendLine() {
 #else
   Serial.print(F("tds:"));     Serial.print(tds);
 #endif
+  pairGap();
   Serial.print(F(",cloud:"));  Serial.print(cloud);
 #endif
-  Serial.print(F(",water:"));  Serial.print(waterC, 1);
-  Serial.print(F(",air:"));    Serial.print(airC, 1);
-  Serial.print(F(",rh:"));     Serial.print((int)rh);
-  Serial.print(F(",sun:"));    Serial.print(sunPct);
-  Serial.print(F(",hi:"));     Serial.print((int)lround(heatF));
-  Serial.print(F(",nest:"));   Serial.print(nestC, 1);
+  pairGap();
+  Serial.print(F(",water:"));  Serial.print(waterC, 1);    pairGap();
+  Serial.print(F(",air:"));    Serial.print(airC, 1);      pairGap();
+  Serial.print(F(",rh:"));     Serial.print((int)rh);      pairGap();
+  Serial.print(F(",sun:"));    Serial.print(sunPct);       pairGap();
+  Serial.print(F(",hi:"));     Serial.print((int)lround(heatF)); pairGap();
+  Serial.print(F(",nest:"));   Serial.print(nestC, 1);     pairGap();
   Serial.print(F(",wq:"));     Serial.println(wq);
 
 #if CAL_MODE
   // Raw numbers for docs/calibration.md. Uses '=' (no ':'), so the Turtle Board ignores it.
+  pairGap();
   Serial.print(F("RAW"));
 #if !NO_SALT_SENSOR
   Serial.print(F(" salt="));  Serial.print(saltRaw.get());
