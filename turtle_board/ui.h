@@ -268,7 +268,7 @@ void drawWater() {
   else if (env.tds > 0) { display.print(F("TDS ")); display.print(env.tds); display.print(F(" ppm")); }
   // no salt sensor on the Reef Station: no salt line
   switch (env.wq) {
-    case WQ_CLEAN:   textAt(0, 48, F("Perfect Gulf water!")); break;
+    case WQ_CLEAN:   textAt(0, 48, F("Clean water. Yay!")); break;
     case WQ_CAUTION: textAt(0, 48, F("A bit cloudy...")); textAt(0, 56, F("runoff? Be careful.")); break;
     case WQ_AVOID:   textAt(0, 48, F("Murky! I feel sick.")); break;
     default:         textAt(0, 48, F("Dip a probe!")); break;

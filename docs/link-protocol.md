@@ -10,7 +10,7 @@ tds:245,cloud:12,water:22.4,air:29.1,rh:55,sun:78,hi:88,nest:30.5,wq:0
 
 | Key | Meaning | Units and range |
 | --- | --- | --- |
-| `tds` | Dissolved salts (TDS sensor). Not sent when `USE_SALT 0` (current demo). | ppm, 0–1000; 1000 = at or over the sensor's limit |
+| `tds` | Dissolved salts (TDS sensor). Not sent with `NO_SALT_SENSOR 1` (current demo), unless `SIM_SALT 1` sends a simulated 1000 or 300. | ppm, 0–1000; 1000 = at or over the sensor's limit |
 | `sal` | Salinity (DIY salt probe, sent instead of `tds`) | ppt, 0 to about 40 |
 | `cloud` | Cloudiness vs. clear-water baseline | %, 0–100 |
 | `water` | Water temperature | °C, one decimal |
@@ -18,7 +18,7 @@ tds:245,cloud:12,water:22.4,air:29.1,rh:55,sun:78,hi:88,nest:30.5,wq:0
 | `rh` | Relative humidity | % |
 | `sun` | Light level, scaled by calibration | %, 0–100 |
 | `hi` | Heat index including the sun correction | °F |
-| `nest` | Temperature inside the egg prop | °C, one decimal |
+| `nest` | Nest sensor temperature (judges pinch it to warm the nest) | °C, one decimal |
 | `wq` | Water verdict | 0 clean, 1 caution, 2 avoid, 3 no sample (probe dry) |
 
 ## Rules

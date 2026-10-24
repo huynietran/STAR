@@ -30,7 +30,7 @@ bottom: date and time, who ran it, pass or fail, and a note on anything odd.
 
 - [ ] No `NO SIG`; unplugging the link wire shows it within 5 s and Health stops changing
 - [ ] Runoff makes the turtle sick within a few seconds
-- [ ] Pinching the nest sensor from the moment the egg appears until it hatches → girl;
+- [ ] Pinching the nest sensor from about 10 s before a new egg until it hatches → girl;
       not touching it → boy (try each twice)
 - [ ] Flashlight held on the light sensor for 20 s → sunscreen reminder; Menu → Sunscreen clears it
 

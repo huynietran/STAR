@@ -1,6 +1,6 @@
 # Calibration
 
-> **Current demo: no salt sensor** (`USE_SALT 0` in `reef_station/config.h`). Skip every salt and TDS step below;
+> **Current demo: no salt sensor** (`NO_SALT_SENSOR 1` in `reef_station/config.h`). Skip every salt and TDS step below;
 > calibrate only the turbidity sensor (`CLOUD_V_CLEAR`, `CLOUD_V_MURKY`, `CLOUD_CAUTION`, `CLOUD_AVOID`),
 > the light sensor and the nest offset. The swim light then works from cloudiness alone:
 > clean → green, slightly cloudy → yellow, runoff → red.
