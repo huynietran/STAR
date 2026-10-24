@@ -28,6 +28,10 @@ tds:245,cloud:12,water:22.4,air:29.1,rh:55,sun:78,hi:88,nest:30.5,wq:0
   adding a key never breaks the other board.
 - No valid pair for 5 seconds → the Turtle Board shows `NO SIG` and pauses all
   environment effects. A loose wire never hurts the turtle.
+- The Reef Station sends the line one pair at a time, about 30 ms apart (`PAIR_GAP_MS`
+  in `reef_station.ino`). The Turtle Board's software serial buffer holds only 63
+  characters and can't empty while a frame is being drawn, so a whole line at once can
+  overflow it, lose the end of the line, and flicker `NO SIG`. Keep the gaps if you add keys.
 - `wq:3` (probe dry) also has no effect on the turtle. Without it, a probe sitting in
   air reads as fresh water and the turtle would slowly sicken between demos.
 
