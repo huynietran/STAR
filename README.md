@@ -5,7 +5,6 @@ Kemp's ridley, the smallest and most endangered sea turtle, from egg to adult on
 OLED screen. Its health reacts to real readings from a sensor station that checks
 water cloudiness, heat, sun and nest temperature.
 
-Hardware hackathon project, demo on Sunday, Oct 25, 2026.
 
 ## How it fits together
 
