@@ -11,7 +11,6 @@ struct Env {
   int16_t  tds        = 0;     // ppm (1000 = at or over the sensor's limit)
   int16_t  sal10      = -1;    // ppt x10, -1 = not sent (DIY salt probe only)
   uint8_t  cloud      = 0;     // % vs clear-water baseline
-  int16_t  water10    = 250;   // C x10
   int16_t  air10      = 250;   // C x10
   uint8_t  rh         = 50;    // %
   uint8_t  sun        = 0;     // %
@@ -59,7 +58,6 @@ void applyPair() {
   if      (!strcmp(k, "tds"))   env.tds = atoi(v);
   else if (!strcmp(k, "sal"))   env.sal10 = tenths(v);
   else if (!strcmp(k, "cloud")) env.cloud = constrain(atoi(v), 0, 100);
-  else if (!strcmp(k, "water")) env.water10 = tenths(v);
   else if (!strcmp(k, "air"))   env.air10 = tenths(v);
   else if (!strcmp(k, "rh"))    env.rh = constrain(atoi(v), 0, 100);
   else if (!strcmp(k, "sun"))   env.sun = constrain(atoi(v), 0, 100);
@@ -107,7 +105,6 @@ void simTick() {
   env.lastSeen = millis();
   env.rh = 55;
   env.tds = 0;        // no salt sensor in the demo: no salt line on screen
-  env.water10 = 240;
   switch (simScenario) {
     case 0:  env.cloud = 3;  env.wq = WQ_CLEAN; env.sun = 20; env.air10 = 260; env.heatIndexF = 79;  env.nest10 = 270; break;
     case 1:  env.cloud = 70; env.wq = WQ_AVOID; env.sun = 20; env.air10 = 260; env.heatIndexF = 79;  env.nest10 = 270; break;

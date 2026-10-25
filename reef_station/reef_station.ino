@@ -9,15 +9,11 @@
 
 #include <LiquidCrystal.h>
 #include <DHT.h>
-#include <OneWire.h>
-#include <DallasTemperature.h>
 #include "config.h"
 #include "median.h"
 
 LiquidCrystal lcd(LCD_RS, LCD_E, LCD_D4, LCD_D5, LCD_D6, LCD_D7);
 DHT dht(PIN_DHT, DHT11);
-OneWire oneWire(PIN_ONEWIRE);
-DallasTemperature waterProbe(&oneWire);
 
 enum { WQ_CLEAN = 0, WQ_CAUTION = 1, WQ_AVOID = 2, WQ_NO_SAMPLE = 3 };
 
@@ -27,7 +23,7 @@ Median saltRaw, cloudRaw, lightRaw, nestRaw;
 int     tds = 0;          // ppm (TDS sensor)
 float   salPpt = 0;       // ppt (DIY salt probe)
 uint8_t cloud = 0;        // %
-float   waterC = 25.0, airC = 25.0, rh = 50, heatBaseF = 77, heatF = 77, nestC = 25.0;
+float   airC = 25.0, rh = 50, heatBaseF = 77, heatF = 77, nestC = 25.0;
 uint8_t sunPct = 0;
 uint8_t wq = WQ_NO_SAMPLE;
 #if NO_SALT_SENSOR && SIM_SALT
@@ -108,11 +104,6 @@ void readDht() {
 }
 
 void computeValues() {
-  // Water temperature: collect last second's conversion, start the next one
-  float t = waterProbe.getTempCByIndex(0);
-  if (t > -100) waterC = t;   // -127 means no probe found
-  waterProbe.requestTemperatures();
-
   bool dry, salty;
 #if NO_SALT_SENSOR
   // No salt sensor: never "dry", and treat every sample as seawater,
@@ -129,9 +120,9 @@ void computeValues() {
   salPpt = dry ? 0 : saltFromRaw(r);
   salty = salPpt >= SAL_SALTY_MIN;
 #else
-  // DFRobot SEN0244 conversion with temperature compensation
-  float v = saltRaw.get() * VREF / 1023.0;
-  float comp = v / (1.0 + 0.02 * (waterC - 25.0));
+  // DFRobot SEN0244 conversion. No water temperature probe, so no temperature
+  // compensation: readings assume water at about 25 C.
+  float comp = saltRaw.get() * VREF / 1023.0;
   long ppm = (long)((133.42 * comp * comp * comp - 255.86 * comp * comp + 857.39 * comp) * 0.5);
   tds = constrain(ppm, 0, 1000);
   dry = tds < TDS_DRY_MAX;
@@ -189,7 +180,6 @@ void sendLine() {
   Serial.print(F(",cloud:"));  Serial.print(cloud);
 #endif
   pairGap();
-  Serial.print(F(",water:"));  Serial.print(waterC, 1);    pairGap();
   Serial.print(F(",air:"));    Serial.print(airC, 1);      pairGap();
   Serial.print(F(",rh:"));     Serial.print((int)rh);      pairGap();
   Serial.print(F(",sun:"));    Serial.print(sunPct);       pairGap();
@@ -248,12 +238,8 @@ void showPage() {
       lcd.print(F("Salt (sim)"));
       lcd.setCursor(0, 1);
       lcd.print(simSalty ? F("SEAWATER") : F("FRESH"));
-#else
-      lcd.print(F("Water ")); lcd.print(waterC, 1); lcd.print('C');
-      lcd.setCursor(0, 1);
-      lcd.print(F("Cloud ")); lcd.print(cloud); lcd.print('%');
 #endif
-      break;
+      break;   // without SIM_SALT this page is skipped (see loop)
 #endif
 #if USE_DIY_SALT
       lcd.print(F("Sal ")); lcd.print(salPpt, 1); lcd.print(F(" ppt"));
@@ -268,10 +254,10 @@ void showPage() {
       break;
     }
     case 2:
-      lcd.print(F("Water ")); lcd.print(waterC, 1); lcd.print('C');
+      if (!dhtOk) { lcd.print(F("Air sensor error")); lcd.setCursor(0, 1); lcd.print(F("Check DHT11 (D7)")); break; }
+      lcd.print(F("Air ")); lcd.print(airC, 1); lcd.print('C');
       lcd.setCursor(0, 1);
-      if (!dhtOk) { lcd.print(F("Air sensor error")); break; }
-      lcd.print(F("Air ")); lcd.print((int)lround(airC)); lcd.print(F("C RH ")); lcd.print((int)rh); lcd.print('%');
+      lcd.print(F("Humidity ")); lcd.print((int)rh); lcd.print('%');
       break;
     case 3:
       lcd.print(F("Feels like ")); lcd.print((int)lround(heatF)); lcd.print('F');
@@ -313,9 +299,6 @@ void setup() {
   lcd.setCursor(0, 1);
   lcd.print(F("Reef Station"));
   dht.begin();
-  waterProbe.begin();
-  waterProbe.setWaitForConversion(false);
-  waterProbe.requestTemperatures();
   pinMode(PIN_LED_GREEN, OUTPUT);
   pinMode(PIN_LED_YELLOW, OUTPUT);
   pinMode(PIN_LED_RED, OUTPUT);
@@ -349,5 +332,8 @@ void loop() {
     lastPage = now;
     showPage();
     page = (page + 1) % 5;
+#if NO_SALT_SENSOR && !SIM_SALT
+    if (page == 1) page = 2;   // no salt page: nothing to show
+#endif
   }
 }

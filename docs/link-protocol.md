@@ -5,7 +5,7 @@ It goes out on D1 to the Turtle Board and over USB to the laptop, where Arduino 
 Serial Plotter graphs it. Change this format only with both board owners agreeing.
 
 ```
-tds:245,cloud:12,water:22.4,air:29.1,rh:55,sun:78,hi:88,nest:30.5,wq:0
+cloud:12,air:29.1,rh:55,sun:78,hi:88,nest:30.5,wq:0
 ```
 
 | Key | Meaning | Units and range |
@@ -13,7 +13,6 @@ tds:245,cloud:12,water:22.4,air:29.1,rh:55,sun:78,hi:88,nest:30.5,wq:0
 | `tds` | Dissolved salts (TDS sensor). Not sent with `NO_SALT_SENSOR 1` (current demo), unless `SIM_SALT 1` sends a simulated 1000 or 300. | ppm, 0–1000; 1000 = at or over the sensor's limit |
 | `sal` | Salinity (DIY salt probe, sent instead of `tds`) | ppt, 0 to about 40 |
 | `cloud` | Cloudiness vs. clear-water baseline | %, 0–100 |
-| `water` | Water temperature | °C, one decimal |
 | `air` | Air temperature | °C, one decimal |
 | `rh` | Relative humidity | % |
 | `sun` | Light level, scaled by calibration | %, 0–100 |

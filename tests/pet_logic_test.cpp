@@ -14,7 +14,7 @@ int main() {
   CHECK(tenths("31.4") == 314); CHECK(tenths("-2") == -20); CHECK(tenths("22") == 220); CHECK(tenths("0.5") == 5);
   char line[] = "tds:245,cloud:12,water:22.4,air:29.1,rh:55,sun:78,hi:88,nest:30.5,wq:2,bogus:7";
   parseLine(line);
-  CHECK(env.tds == 245); CHECK(env.cloud == 12); CHECK(env.water10 == 224); CHECK(env.air10 == 291);
+  CHECK(env.tds == 245); CHECK(env.cloud == 12); CHECK(env.air10 == 291);   // water: no longer used, ignored
   CHECK(env.rh == 55); CHECK(env.sun == 78); CHECK(env.heatIndexF == 88); CHECK(env.nest10 == 305); CHECK(env.wq == 2);
   CHECK(envFresh());
   fakeMillis += 6000; CHECK(!envFresh());

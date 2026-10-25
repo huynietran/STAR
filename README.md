@@ -12,7 +12,6 @@ Hardware hackathon project, demo on Sunday, Oct 25, 2026.
 ```
  Water cups      Air         Sun             Nest
  turbidity       DHT11       photoresistor   TMP36 (pinch to warm)
- DS18B20
       \            |            |             /
        v           v            v            v
  +--------------------------------------------------------+
@@ -55,8 +54,7 @@ Hardware hackathon project, demo on Sunday, Oct 25, 2026.
 1. Install **Arduino IDE 2**.
 2. Library Manager: install **Adafruit SSD1306** (say yes to its dependencies:
    Adafruit GFX Library, Adafruit BusIO), **DHT sensor library** by Adafruit (yes to
-   Adafruit Unified Sensor), **OneWire**, **DallasTemperature**. LiquidCrystal,
-   Wire and SoftwareSerial come with the IDE.
+   Adafruit Unified Sensor). LiquidCrystal, Wire and SoftwareSerial come with the IDE.
 3. Board: **Arduino Uno**.
 4. Open `turtle_board/turtle_board.ino` or `reef_station/reef_station.ino`. Every
    `.h` file in the folder opens as a tab.

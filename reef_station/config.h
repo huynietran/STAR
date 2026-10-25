@@ -20,7 +20,6 @@ const uint8_t PIN_TURBIDITY  = A1;   // also the DIY cloudiness photoresistor
 const uint8_t PIN_LIGHT      = A2;   // photoresistor "sun" sensor
 const uint8_t PIN_NEST       = A3;   // TMP36 inside the egg prop
 const uint8_t PIN_DHT        = 7;
-const uint8_t PIN_ONEWIRE    = 8;    // DS18B20, 4.7 kOhm pull-up to 5 V
 const uint8_t PIN_LED_GREEN  = 6;
 const uint8_t PIN_LED_YELLOW = A4;
 const uint8_t PIN_LED_RED    = A5;

@@ -21,8 +21,6 @@ jobs:
             - name: Adafruit BusIO
             - name: DHT sensor library
             - name: Adafruit Unified Sensor
-            - name: OneWire
-            - name: DallasTemperature
             - name: LiquidCrystal
 
   logic-tests:

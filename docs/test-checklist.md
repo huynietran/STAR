@@ -19,7 +19,7 @@ bottom: date and time, who ran it, pass or fail, and a note on anything odd.
 
 ## Reef Station alone
 
-- [ ] LCD cycles through all 5 pages
+- [ ] LCD cycles through 4 pages: water verdict, air and humidity, feels-like, sun and nest
 - [ ] Serial Monitor shows one line per second (`CAL_MODE 0`: no RAW lines)
 - [ ] Probe resting in the Clean cup: green light, CLEAN on the LCD
 - [ ] Clean tap water → green, Slightly cloudy → yellow, Runoff → red

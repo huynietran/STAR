@@ -29,12 +29,11 @@ board's `config.h` in the same commit.
 | A2 | Photoresistor divider | Photoresistor 5 V → A2, 10 kΩ A2 → GND |
 | A3 | TMP36 "nest" sensor, at the breadboard edge so judges can pinch it | Flat face toward you: left 5 V, middle signal, right GND. Pinching it warms the nest; only the middle third of the egg stage counts. |
 | D7 | DHT11 data | Bare 4-pin DHT11 needs 10 kΩ to 5 V; modules have it |
-| D8 | DS18B20 data | 4.7 kΩ pull-up to 5 V |
 | D1 (TX) | 1 kΩ → Turtle Board D8 | Same data also goes to the laptop over USB |
 | D6 | Green LED via 220 Ω | Clean |
 | A4 | Yellow LED via 220 Ω | Caution |
 | A5 | Red LED via 220 Ω | Avoid |
-| D9, D10, D13 | Spare | Used by the DIY sensors below. D9 is also the optional simulated-salt button (`SIM_SALT 1`): pushbutton between D9 and GND. |
+| D8, D9, D10, D13 | Spare | Used by the DIY sensors below. D9 is also the optional simulated-salt button (`SIM_SALT 1`): pushbutton between D9 and GND. |
 
 If an upload to Board 2 fails, unplug the D1 link wire and try again.
 
