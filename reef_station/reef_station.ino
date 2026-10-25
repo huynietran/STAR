@@ -1,4 +1,4 @@
-// Ridley's Reef -- Reef Station (Board 2)
+// STAR (Sea Turtle Advocacy & Rescue) -- Reef Station (Board 2)
 // Reads every sensor, decides the water and heat verdicts, shows them on the LCD
 // and traffic light, and sends one line per second to the Turtle Board.
 // The same line goes to USB: open Tools > Serial Plotter (9600) for a live graph.
@@ -295,9 +295,9 @@ void pollSimSaltButton(unsigned long now) {
 void setup() {
   Serial.begin(9600);   // D1 (TX) also feeds the Turtle Board
   lcd.begin(16, 2);
-  lcd.print(F("Ridley's Reef"));
+  lcd.print(F("STAR Sea Turtle"));   // 16 x 2 splash: "Sea Turtle Advocacy & Rescue"
   lcd.setCursor(0, 1);
-  lcd.print(F("Reef Station"));
+  lcd.print(F("Advocacy&Rescue"));
   dht.begin();
   pinMode(PIN_LED_GREEN, OUTPUT);
   pinMode(PIN_LED_YELLOW, OUTPUT);

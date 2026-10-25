@@ -1,4 +1,4 @@
-// Ridley's Reef -- Turtle Board (Board 1) settings.
+// STAR (Sea Turtle Advocacy & Rescue) -- Turtle Board (Board 1) settings.
 // Pins must match docs/pinmap.md. Change both or neither.
 #pragma once
 #include <Arduino.h>

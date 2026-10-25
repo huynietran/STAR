@@ -1,4 +1,4 @@
-// Ridley's Reef sprites. PLACEHOLDER art: replace any array with real art,
+// STAR sprites. PLACEHOLDER art: replace any array with real art,
 // keeping the SAME name and SAME size. Full guide: the team's Sprite Guide doc.
 // Format: 1 bit per pixel, rows left to right, PROGMEM (image2cpp: Horizontal, 1 bpp).
 #pragma once

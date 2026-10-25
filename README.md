@@ -1,4 +1,4 @@
-# Ridley's Reef
+# STAR: Sea Turtle Advocacy & Rescue
 
 A two-Arduino virtual pet that teaches beach and sea-turtle care. You raise a
 Kemp's ridley, the smallest and most endangered sea turtle, from egg to adult on an

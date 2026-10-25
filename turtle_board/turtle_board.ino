@@ -1,4 +1,4 @@
-// Ridley's Reef -- Turtle Board (Board 1)
+// STAR (Sea Turtle Advocacy & Rescue) -- Turtle Board (Board 1)
 // A Kemp's ridley virtual pet whose health reacts to the Reef Station's readings.
 //
 // Before uploading:

@@ -1,4 +1,4 @@
-// Ridley's Reef -- Reef Station (Board 2) settings and calibration.
+// STAR (Sea Turtle Advocacy & Rescue) -- Reef Station (Board 2) settings and calibration.
 // Pins must match docs/pinmap.md. Calibration values come from docs/calibration.md.
 // Owner: Reef Station lead
 #pragma once
