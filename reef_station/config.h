@@ -44,6 +44,11 @@ const float SALT_CAL_PPT[4] = {0, 5, 15, 35};
 const int   SALT_DRY_RAW    = 10;      // below this the probe is out of the water
 const float SAL_SALTY_MIN   = 20.0;    // ppt that counts as salt water
 
+// Demo switch: 1 = never report murky water (no red light, no "Murky water!" sickness).
+// The worst verdict becomes "slightly cloudy" (yellow), which costs the turtle only
+// 1 health every 4 s instead of 1 every second. Set back to 0 to show the red light.
+#define MURKY_OFF 1
+
 // Verdict thresholds
 const uint8_t CLOUD_CAUTION = 15;   // %
 const uint8_t CLOUD_AVOID   = 40;   // %

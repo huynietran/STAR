@@ -144,6 +144,9 @@ void computeValues() {
   else if (cloud >= CLOUD_AVOID)  wq = WQ_AVOID;
   else if (cloud >= CLOUD_CAUTION || !salty) wq = WQ_CAUTION;   // fresh water at a beach = runoff
   else                            wq = WQ_CLEAN;
+#if MURKY_OFF
+  if (wq == WQ_AVOID) wq = WQ_CAUTION;   // demo: murky shows as "slightly cloudy"
+#endif
 }
 
 // ---------------- Outputs ----------------

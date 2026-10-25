@@ -22,14 +22,14 @@ bottom: date and time, who ran it, pass or fail, and a note on anything odd.
 - [ ] LCD cycles through 4 pages: water verdict, air and humidity, feels-like, sun and nest
 - [ ] Serial Monitor shows one line per second (`CAL_MODE 0`: no RAW lines)
 - [ ] Probe resting in the Clean cup: green light, CLEAN on the LCD
-- [ ] Clean tap water → green, Slightly cloudy → yellow, Runoff → red
+- [ ] Clean tap water → green, Slightly cloudy → yellow, Runoff → red (yellow while `MURKY_OFF 1`)
 - [ ] Phone flashlight on the light sensor raises Sun %
 - [ ] Pinching the TMP36 raises Nest above 30 °C within about 15 s
 
 ## Both boards linked (`SIM_ENV 0` on the Turtle Board)
 
 - [ ] No `NO SIG`; unplugging the link wire shows it within 5 s and Health stops changing
-- [ ] Runoff makes the turtle sick within a few seconds
+- [ ] Runoff makes the turtle sick within a few seconds (only with `MURKY_OFF 0`)
 - [ ] Pinching the nest sensor from about 10 s before a new egg until it hatches → girl;
       not touching it → boy (try each twice)
 - [ ] Flashlight held on the light sensor for 20 s → sunscreen reminder; Menu → Sunscreen clears it
